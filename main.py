@@ -23,7 +23,7 @@ def Conversa(prompt: str):
     return requisitar.json()
 
 def SalvarSessao(sessao: list):
-    pastaHistorico = Path(__file__).resolve().parent / "historicoDeSessoes"
+    pastaHistorico = Path(__file__).resolve().parent.parent / "Histórico"
     pastaHistorico.mkdir(parents=True, exist_ok=True)
 
     nomeSessao = re.sub( r'[<>:"/\\|?*]', "", sessao[0]['USUÁRIO'])
