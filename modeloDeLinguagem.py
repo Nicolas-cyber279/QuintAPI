@@ -5,7 +5,7 @@ class Quint:
         self.model = model
         self.host = host
 
-    def gerar_resposta(self, prompt):
+    def GerarResposta(self, prompt):
         try:
             response = requests.post(
                 f"{self.host}/api/generate",

@@ -1,20 +1,18 @@
 from main import Conversa
-import json
-import datetime
+from main import SalvarSessao
+
+sessao = []
 
 while True:
-    sessao = []
-
     prompt = input("Você: ")
     if prompt.lower().strip() == "tchau":
-        print("Obrigado por falar com o Q.U.I.N.T., até a próxima!")
-
-        with open(f"Conversa{datetime.date}_{datetime.time}", "w", encoding="utf-8") as arquivo:
-            json.dump(sessao, arquivo, ensure_ascii=False, indent=4)
+        print(SalvarSessao(sessao))
         break
 
-    conversa = Conversa(prompt)
-    sessao.append(conversa)
+    try:
+        conversa = Conversa(prompt)
+        sessao.append(conversa)
+        print(f"Quint: {conversa['RESPOSTA']}")
 
-    print(f"Quint: {conversa["RESPOSTA"]}")
-    
+    except Exception as e:
+        print(f"Falha ao conectar com a API: {e}")

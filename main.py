@@ -1,4 +1,7 @@
 import requests
+import json
+import re
+from pathlib import Path
 from fastapi import FastAPI
 from modeloDeLinguagem import Quint
 
@@ -9,12 +12,29 @@ quint = Quint(model="llama3.2")
 def LerRaís():
     return {"Chave": "Valor"}
 
+@api.get("/conversas/respostas")
+def LerResposta(prompt: str):
+    resposta = quint.GerarResposta(prompt)
+    return {"USUÁRIO": prompt, "RESPOSTA": resposta}
 
-def Conversa(prompt: str | None = None):
-    requisitar = requests.post(f"http://localhost:8000/conversas/respostas/{prompt}", timeout=120)
+def Conversa(prompt: str):
+    url = "http://127.0.0.1:8000/conversas/respostas"
+    requisitar = requests.get(url, params={"prompt":prompt})
+    return requisitar.json()
+
+def SalvarSessao(sessao: list):
+    pastaHistorico = Path(__file__).resolve().parent / "historicoDeSessoes"
+    pastaHistorico.mkdir(parents=True, exist_ok=True)
+
+    nomeSessao = re.sub( r'[<>:"/\\|?*]', "", sessao[0]['USUÁRIO'])
+    nomeArquivo = f"{nomeSessao}.json"
+    caminhoArquivo = pastaHistorico / nomeArquivo
     
-    @api.get(f"/conversas/respostas/{prompt}")
-    def LerResposta(resposta: str | None = "Nada ainda, aguarde..."):
-        resposta = quint.gerar_resposta(prompt)
-        return {"USUÁRIO": prompt, "RESPOSTA": resposta}
+    try:
+        with caminhoArquivo.open("w", encoding="utf-8") as arquivo:
+            json.dump(sessao, arquivo, ensure_ascii=False, indent=4)
+
+        return f"Obrigado por falar com o Q.U.I.N.T.\nSessão Salva em {caminhoArquivo}."
     
+    except (OSError, TypeError) as erro:
+        return f"Erro '{erro}' ao salvar a sessão"
