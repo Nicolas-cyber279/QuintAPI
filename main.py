@@ -12,13 +12,13 @@ quint = Quint(model="llama3.2")
 def LerRaís():
     return {"Chave": "Valor"}
 
-@api.get("/conversas/respostas")
+@api.get("/QUINT/conversas/respostas")
 def LerResposta(prompt: str):
     resposta = quint.GerarResposta(prompt)
     return {"USUÁRIO": prompt, "RESPOSTA": resposta}
 
 def Conversa(prompt: str):
-    url = "http://127.0.0.1:8000/conversas/respostas"
+    url = "http://127.0.0.1:8000/QUINT/conversas/respostas"
     requisitar = requests.get(url, params={"prompt":prompt})
     return requisitar.json()
 
