@@ -18,7 +18,7 @@ def LerResposta(prompt: str):
     return {"USUÁRIO": prompt, "RESPOSTA": resposta}
 
 def Conversa(prompt: str):
-    url = "http://127.0.0.1:8000/QUINT/conversas/respostas"
+    url = "https://api.nicolasvaladares.pro/QUINT/conversas/respostas"
     requisitar = requests.get(url, params={"prompt":prompt})
     return requisitar.json()
 
