@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 from fastapi import FastAPI
 from modeloDeLinguagem import Quint
+from datetime import datetime
 
 api = FastAPI()
 quint = Quint(model="llama3.2")
@@ -25,7 +26,7 @@ def SalvarSessao(sessao: list):
     pastaHistorico = Path(__file__).resolve().parent.parent / "Histórico"
     pastaHistorico.mkdir(parents=True, exist_ok=True)
 
-    nomeSessao = Conversa(f"Este é um prompt do início da sessão que você teve com o usuário: '{sessao[0]['USUÁRIO']}'\nFaça um resumo de uma linha, dê preferência para resumir usando de 3 a 5 palavras, com base no contexto dele para nomear o arquivo JSON que vai guardar a conversa. Responda só com o nome do arquivo, por favor.")
+    nomeSessao = f"Sessão de {datetime.now()}"
     nomeArquivo = f"{nomeSessao['RESPOSTA']}.json"
     caminhoArquivo = pastaHistorico / nomeArquivo
     
