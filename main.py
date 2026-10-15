@@ -26,8 +26,8 @@ def SalvarSessao(sessao: list):
     pastaHistorico = Path(__file__).resolve().parent.parent / "Histórico"
     pastaHistorico.mkdir(parents=True, exist_ok=True)
 
-    nomeSessao = re.sub( r'[<>:"/\\|?*]', "", sessao[0]['USUÁRIO'])
-    nomeArquivo = f"{nomeSessao}.json"
+    nomeSessao = Conversa(f"Este é um prompt do início da sessão que você teve com o usuário: '{sessao[0]['USUÁRIO']}'\nFaça um resumo de uma linha, dê preferência para resumir usando de 3 a 5 palavras, com base no contexto dele para nomear o arquivo JSON que vai guardar a conversa. Responda só com o nome do arquivo, por favor.")
+    nomeArquivo = f"{nomeSessao['RESPOSTA']}.json"
     caminhoArquivo = pastaHistorico / nomeArquivo
     
     try:
