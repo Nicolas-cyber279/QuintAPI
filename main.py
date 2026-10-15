@@ -1,6 +1,5 @@
 import requests
 import json
-import re
 from pathlib import Path
 from fastapi import FastAPI
 from modeloDeLinguagem import Quint
