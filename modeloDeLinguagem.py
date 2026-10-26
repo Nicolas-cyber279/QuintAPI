@@ -14,7 +14,7 @@ class Quint:
                     "prompt": prompt,
                     "stream": False
                 },
-                timeout=120
+                timeout=60
             )
 
             response.raise_for_status()
