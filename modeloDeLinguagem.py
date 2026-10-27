@@ -31,7 +31,7 @@ class Quint:
 
         except requests.exceptions.Timeout:
             raise RuntimeError(
-                "O Ollama demorou mais de 2 minutos para responder."
+                "O Ollama demorou mais de 1 minuto para responder."
             )
 
         except requests.exceptions.HTTPError as erro:
