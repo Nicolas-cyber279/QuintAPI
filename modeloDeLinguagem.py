@@ -1,7 +1,7 @@
 import requests
 
 class Quint:
-    def __init__(self, model="llama3.2", host="http://localhost:11434"):
+    def __init__(self, model="gemma4:31b-cloud", host="http://localhost:11434"):
         self.model = model
         self.host = host
 

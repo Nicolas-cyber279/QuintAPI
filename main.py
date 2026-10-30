@@ -14,7 +14,7 @@ class ContinuarSessaoRequest(BaseModel):
     prompt: str
 
 api = FastAPI()
-quint = Quint(model="llama3.2")
+quint = Quint()
 pastaHistorico = Path(__file__).resolve().parent.parent / "Histórico"
 
 @api.get("/")
