@@ -1,8 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from pathlib import Path
 from modeloDeLinguagem import Quint
-from uuid import uuid4
+from uuid import UUID, uuid4
 import json
 from datetime import datetime
 
@@ -52,21 +52,6 @@ def IniciarSessao(dados: InicioSessaoRequest):
     except (OSError, TypeError) as erro:
         return f"Erro '{erro}' ao criar a sessão"
 
-@api.get("/QUINT/Conversas")
-def EnviarConversas():
-    conversas = []
-
-    for caminhoArquivo in sorted(pastaHistorico.glob("*.json")):
-        with caminhoArquivo.open("r", encoding="utf-8") as arquivo:
-            sessao = json.load(arquivo)
-
-        conversas.append({
-            "ID": sessao[0]['ID'],
-            "TÍTULO": sessao[0]['TÍTULO']
-        })
-
-    return conversas
-
 @api.post("/QUINT/ContinuarSessao")
 def ContinuarSessao(dados: ContinuarSessaoRequest):
     id = dados.id
@@ -92,6 +77,38 @@ def ContinuarSessao(dados: ContinuarSessaoRequest):
 
     except (OSError, TypeError) as erro:
         return f"Erro '{erro}' ao salvar a sessão"
+
+@api.get("/QUINT/Conversas")
+def EnviarConversas():
+    conversas = []
+
+    for caminhoArquivo in sorted(pastaHistorico.glob("*.json")):
+        with caminhoArquivo.open("r", encoding="utf-8") as arquivo:
+            sessao = json.load(arquivo)
+
+        conversas.append({
+            "ID": sessao[0]['ID'],
+            "TÍTULO": sessao[0]['TÍTULO']
+        })
+
+    return conversas
+
+@api.get("/QUINT/RetomarMensagens")
+def RetomarMensagens(id: UUID):
+    caminhoArquivo = pastaHistorico / f"{id}.json"
+
+    try:
+        with caminhoArquivo.open("r", encoding="utf-8") as arquivo:
+            sessao = json.load(arquivo)
+    except FileNotFoundError as erro:
+        raise HTTPException(status_code=404, detail="Sessão não encontrada") from erro
+    except (OSError, json.JSONDecodeError) as erro:
+        raise HTTPException(
+            status_code=500,
+            detail="Não foi possível ler o histórico da sessão",
+        ) from erro
+
+    return sessao[1:]
 
 def CriarID():
     while True:
