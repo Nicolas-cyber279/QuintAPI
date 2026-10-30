@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pathlib import Path
 from modeloDeLinguagem import Quint
@@ -14,6 +15,15 @@ class ContinuarSessaoRequest(BaseModel):
     prompt: str
 
 api = FastAPI()
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://nicolasvaladares.pro",
+        "https://www.nicolasvaladares.pro",
+    ],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Accept", "Content-Type"],
+)
 quint = Quint()
 pastaHistorico = Path(__file__).resolve().parent.parent / "Histórico"
 
